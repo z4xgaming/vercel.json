@@ -194,12 +194,8 @@
 
         // Simulate add balance (demo)
         document.getElementById('simulate-add-balance').addEventListener('click', function() {
-            fetch('/purchase', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({plan: 'A'}) // dummy to add balance? Actually we'll just alert.
-            })
-            .then(() => alert('Demo: Balance increased by $100 (simulated)'));
+            // In real app, you'd call an endpoint to add balance
+            alert('Demo: Balance increased by $100 (simulated)');
         });
 
         // ---------- Upload ZIP ----------
@@ -246,30 +242,18 @@
             });
         });
 
-        // Delete (simple reload after removal - we can just remove from DOM)
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 if (!confirm('Delete this bot?')) return;
                 const id = this.dataset.id;
-                fetch(`/stop_bot/${id}`, {method: 'POST'}) // stop if running
+                // We don't have a delete endpoint, but we can stop it first
+                fetch(`/stop_bot/${id}`, {method: 'POST'})
                 .then(() => {
-                    // remove from server (we don't have delete endpoint, but we can just reload)
                     alert('Bot deleted (demo).');
                     location.reload();
                 });
             });
         });
-
-        // Refresh metrics periodically (optional)
-        setInterval(() => {
-            fetch('/api/metrics')
-            .then(res => res.json())
-            .then(data => {
-                // update gauge widths and numbers
-                // simplified: reload page for demo, or update dynamically
-                // For production, would update DOM without reload
-            });
-        }, 5000);
     </script>
 
     <!-- Login/Register overlay if not logged in -->
@@ -292,4 +276,4 @@
     </div>
     {% endif %}
 </body>
-  </html>
+    </html>
