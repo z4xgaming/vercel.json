@@ -22,7 +22,7 @@ os.makedirs('./extracted', exist_ok=True)
 users = {
     'admin': {'password': 'admin123', 'balance': 1000, 'plan': 'free'}
 }
-bots = {}  # bot_id -> { 'name', 'status', 'activated', 'expiry', 'plan', 'file', 'thread' }
+bots = {}  # bot_id -> { 'name', 'status', 'activated', 'expiry', 'plan', 'file', 'extract_path' }
 threads = {}
 metrics = {
     'storage_used': 0,       # in GB
@@ -38,7 +38,7 @@ PLANS = {
     'B': {'ram': '1060 GB', 'storage': '10 TB NVMe', 'price': 1200, 'days': 60}
 }
 
-# Helper: generate random metrics for demo
+# Helper: random metrics for demo
 def update_metrics():
     metrics['storage_used'] = round(random.uniform(5, 100), 1)
     metrics['bandwidth_usage'] = round(random.uniform(0, 500), 1)
@@ -237,6 +237,11 @@ def purchase():
 @app.route('/static/<path:path>')
 def serve_static(path):
     return send_from_directory('static', path)
+
+# Handle 404 errors gracefully (optional)
+@app.errorhandler(404)
+def page_not_found(e):
+    return jsonify({'error': 'Not found'}), 404
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
